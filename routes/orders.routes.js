@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const authMiddleware = require("../middlewares/authMiddleware");
-const orderGuard = require("../middlewares/orderGuard");
+const adminGuard = require("../middlewares/adminGuard");
+const selfGuard = require("../middlewares/selfGuard");
 const {
   createOrder,
   getAllOrders,
@@ -8,12 +9,12 @@ const {
   updateOrder,
   deleteOrder,
 } = require("../controllers/orders.controller");
-const adminGuard = require("../middlewares/adminGuard");
 
-router.get("/", authMiddleware, getAllOrders);
-router.get("/:id", authMiddleware, getOrderById);
-router.post("/", authMiddleware, orderGuard, createOrder);
-router.put("/:id", authMiddleware, orderGuard, updateOrder);
-router.delete("/:id", authMiddleware, orderGuard, deleteOrder);
+
+router.post("/", authMiddleware, createOrder);
+router.get("/", authMiddleware, adminGuard, getAllOrders);
+router.get("/:id", authMiddleware, selfGuard, getOrderById);
+router.put("/:id", authMiddleware, selfGuard, updateOrder);
+router.delete("/:id", authMiddleware, adminGuard, deleteOrder);
 
 module.exports = router;

@@ -5,27 +5,12 @@ const { ForbiddenError } = require("../utils/logger");
 const orderGuard = async (req, res, next) => {
   try {
 
-    if (req.user.role !== "owner") {
-      return next(new ForbiddenError("Faqat egasi bu amalni bajarishi mumkin"));
-    }
-
-    if (req.method === "GET" || req.method === "POST") {
+    if (req.user.role === "client" || req.user.role === "owner") {
       return next();
     }
-
-    const orderId = req.params.id;
-    const order = await Order.findByPk(orderId);
-
-    if (!order) {
-      return next(new ForbiddenError("Buyurtma topilmadi"));
-    }
-
-    const service = await Service.findByPk(order.service_id);
-    if (!service) {
-      return next(new ForbiddenError("Xizmat topilmadi"));
-    }
-
-    next();
+    return next(
+      new ForbiddenError("Faqat mijoz yoki egasi bu amalni bajarishi mumkin")
+    );
   } catch (error) {
     next(error);
   }
