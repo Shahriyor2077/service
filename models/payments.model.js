@@ -35,7 +35,7 @@ const Payment = sequelize.define(
   }
 );
 
-// Payment modeliga orders bog'lanishini qo'shamiz
+// Paymentga order bog'lanadi
 Payment.associate = (models) => {
   Payment.belongsTo(models.Order, {
     foreignKey: "order_id",

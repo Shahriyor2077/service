@@ -38,7 +38,7 @@ const Order = sequelize.define(
   }
 );
 
-// Order modeliga bog'lanishlarni qo'shamiz
+// Order modeliga bog'lanishlar
 Order.associate = (models) => {
   Order.belongsTo(models.Client, {
     foreignKey: "client_id",

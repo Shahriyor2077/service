@@ -37,7 +37,7 @@ const Services = sequelize.define(
   }
 );
 
-// Services modeliga orders bog'lanishini qo'shamiz
+// Services ga orders bog'lanadi
 Services.associate = (models) => {
   Services.hasMany(models.Order, {
     foreignKey: "service_id",

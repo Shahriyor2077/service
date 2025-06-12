@@ -42,7 +42,7 @@ class ConflictError extends AppError {
   }
 }
 
-// Log format
+
 const logFormat = winston.format.combine(
   winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
   winston.format.errors({ stack: true }),
@@ -62,7 +62,7 @@ const consoleFormat = winston.format.combine(
   })
 );
 
-// Log levels
+
 const levels = {
   error: 0,
   warn: 1,
@@ -77,7 +77,7 @@ const level = () => {
   return isDevelopment ? "debug" : "warn";
 };
 
-// Log colors
+
 const colors = {
   error: "red",
   warn: "yellow",

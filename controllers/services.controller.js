@@ -15,7 +15,7 @@ async function createService(req, res, next) {
     }
     const service = await Service.create({
       ...req.body,
-      owner_id: req.user.id, // Token'dan olingan admin ID'si
+      owner_id: req.user.id, 
     });
     res.status(201).json({ message: "Xizmat yaratildi", service });
   } catch (err) {
@@ -36,31 +36,28 @@ async function getAllServices(req, res, next) {
       sort_order = "ASC",
     } = req.query;
 
-    // Qidiruv shartlari
     const where = {};
 
-    // Nom bo'yicha qidirish
     if (name) {
       where.name = {
         [Op.iLike]: `%${name}%`,
       };
     }
 
-    // Narx bo'yicha filtrlash
     if (min_price || max_price) {
       where.price = {};
       if (min_price) where.price[Op.gte] = min_price;
       if (max_price) where.price[Op.lte] = max_price;
     }
 
-    // Davomiylik bo'yicha filtrlash
+
     if (min_duration || max_duration) {
       where.duration = {};
       if (min_duration) where.duration[Op.gte] = min_duration;
       if (max_duration) where.duration[Op.lte] = max_duration;
     }
 
-    // Saralash
+    
     const order = [[sort_by, sort_order]];
 
     const services = await Service.findAll({

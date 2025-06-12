@@ -10,7 +10,7 @@ const {
   getClientPaymentsByService,
 } = require("../controllers/filters.controller");
 
-// 1. Berilgan vaqt oralig'ida foydalanilgan xizmatlar ro'yxatini chiqarish
+// 1. Berilgan vaqt oralig'ida foydalanilgan xizmatlar ro'yxati
 router.get(
   "/services-by-date",
   authMiddleware,
@@ -25,7 +25,7 @@ router.get(
   getServicesByDateRange
 );
 
-// 2. Berilgan vaqt oralig'ida xizmatdan foydalangan Clientlar ro'yxatini chiqarish
+// 2. Berilgan vaqt oralig'ida xizmatdan foydalangan Clientlar ro'yxati
 router.get(
   "/clients-by-date",
   authMiddleware,
@@ -39,7 +39,7 @@ router.get(
   getClientsByDateRange
 );
 
-// 3. Berilgan vaqt oralig'ida xizmatni bekor qilgan Clientlar ro'yxatini chiqarish
+// 3. Berilgan vaqt oralig'ida xizmatni bekor qilgan Clientlar ro'yxati
 router.get(
   "/cancelled-clients-by-date",
   authMiddleware,
@@ -53,7 +53,7 @@ router.get(
   getCancelledClientsByDateRange
 );
 
-// 4. Berilgan xizmat nomi bo'yicha eng ko'p bajargan Ownerlar ro'yxatini chiqarish
+// 4. Berilgan xizmat nomi bo'yicha eng ko'p bajargan Ownerlar ro'yxati
 router.get(
   "/top-owners-by-service",
   authMiddleware,
@@ -67,7 +67,7 @@ router.get(
   getTopOwnersByService
 );
 
-// 5. Berilgan Client ma'lumotlari asosida qaysi xizmatga (ownerni ko'rsatgan holda) amalga oshirilgan Paymentlar ro'yxatini chiqarish
+// 5. Berilgan Client ma'lumotlari asosida qaysi xizmatga amalga oshirilgan Paymentlar ro'yxati
 router.get(
   "/client-payments/:client_id",
   authMiddleware,

@@ -3,8 +3,8 @@ const Joi = require("joi");
 const createAdminSchema = Joi.object({
   name: Joi.string().min(3).max(50).required(),
   email: Joi.string().email().required(),
-  password: Joi.string().min(8).required(),
-  role: Joi.string().min(3).max(50).required(),
+  password: Joi.string().min(6).required(),
+  role: Joi.string().valid("admin", "owner").required(),
   is_active: Joi.boolean().default(true),
 });
 
@@ -21,8 +21,18 @@ const loginAdminSchema = Joi.object({
   password: Joi.string().required(), // `password_hash` emas, `password` bo'lishi kerak
 });
 
+const changePasswordSchema = Joi.object({
+  currentPassword: Joi.string().required(),
+  newPassword: Joi.string().min(6).required(),
+  confirmPassword: Joi.string()
+    .valid(Joi.ref("newPassword"))
+    .required()
+    .messages({ "any.only": "Yangi parollar mos kelmadi" }),
+});
+
 module.exports = {
   createAdminSchema,
   updateAdminSchema,
   loginAdminSchema,
+  changePasswordSchema,
 };

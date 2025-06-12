@@ -18,7 +18,7 @@ const {
 const sendEmail = require("../helpers/send_email");
 const { generateTokens } = require("../helpers/generate_tokens");
 
-// Admin uchun ro'yxatdan o'tish
+
 const adminRegister = async (req, res, next) => {
   try {
     const { error } = createAdminSchema.validate(req.body);
@@ -36,17 +36,17 @@ const adminRegister = async (req, res, next) => {
         .json({ message: "Bu email allaqachon ro'yxatdan o'tgan" });
     }
 
-    // Parolni hash qilish
+
     const salt = await bcrypt.genSalt(10);
     const password_hash = await bcrypt.hash(password, salt);
 
-    // Admin yaratish
+   
     const admin = await Admin.create({
       name,
       email,
       password_hash,
       role,
-      is_active: role === "owner" ? false : true, // Owner uchun aktivatsiya kerak
+      is_active: role === "owner" ? false : true, 
     });
 
     // Agar owner bo'lsa, aktivatsiya emaili yuborish
@@ -67,7 +67,7 @@ const adminRegister = async (req, res, next) => {
       });
     }
 
-    // Token generatsiya qilish
+    
     const { accessToken, refreshToken } = generateTokens(admin.id, admin.role);
 
     res.status(201).json({
@@ -86,7 +86,7 @@ const adminRegister = async (req, res, next) => {
   }
 };
 
-// Admin uchun tizimga kirish
+
 const adminLogin = async (req, res, next) => {
   try {
     const { error } = loginAdminSchema.validate(req.body);
@@ -96,7 +96,7 @@ const adminLogin = async (req, res, next) => {
 
     const { email, password } = req.body;
 
-    // Adminni topish
+
     const admin = await Admin.findOne({ where: { email } });
     if (!admin) {
       return res.status(401).json({ message: "Email yoki parol noto'g'ri" });
@@ -108,14 +108,12 @@ const adminLogin = async (req, res, next) => {
       return res.status(401).json({ message: "Email yoki parol noto'g'ri" });
     }
 
-    // Token generatsiya qilish
     const { accessToken, refreshToken } = generateTokens(admin.id, admin.role);
 
-    // Refresh tokenni saqlash
     admin.refreshToken = refreshToken;
     admin.refreshToken_expires_at = new Date(
       Date.now() + 7 * 24 * 60 * 60 * 1000
-    ); // 7 kun
+    ); 
     await admin.save();
 
     res.json({
@@ -134,7 +132,8 @@ const adminLogin = async (req, res, next) => {
   }
 };
 
-// Admin uchun tizimdan chiqish
+
+
 const adminLogout = async (req, res, next) => {
   try {
     const admin = await Admin.findByPk(req.user.id);
@@ -152,7 +151,7 @@ const adminLogout = async (req, res, next) => {
   }
 };
 
-// Admin refresh tokenini yangilash
+
 const adminRefreshToken = async (req, res, next) => {
   try {
     const { refreshToken } = req.body;
@@ -181,7 +180,7 @@ const adminRefreshToken = async (req, res, next) => {
     admin.refreshToken = newRefreshToken;
     admin.refreshToken_expires_at = new Date(
       Date.now() + 7 * 24 * 60 * 60 * 1000
-    ); // 7 kun
+    ); 
     await admin.save();
 
     res.json({
@@ -194,7 +193,7 @@ const adminRefreshToken = async (req, res, next) => {
   }
 };
 
-// Client uchun ro'yxatdan o'tish
+
 const clientRegister = async (req, res, next) => {
   try {
     const { error } = createClientSchema.validate(req.body);
@@ -204,7 +203,7 @@ const clientRegister = async (req, res, next) => {
 
     const { name, email, password, phone } = req.body;
 
-    // Email mavjudligini tekshirish
+  
     const existingClient = await Client.findOne({ where: { email } });
     if (existingClient) {
       return res
@@ -221,7 +220,7 @@ const clientRegister = async (req, res, next) => {
       expiresIn: "24h",
     });
 
-    // Client yaratish
+    
     const client = await Client.create({
       name,
       email,
@@ -231,7 +230,7 @@ const clientRegister = async (req, res, next) => {
       activation_token: activationToken,
     });
 
-    // Aktivatsiya emaili yuborish
+
     const activationLink = `${config.get(
       "clientUrl"
     )}/activate/${activationToken}`;
@@ -243,7 +242,7 @@ const clientRegister = async (req, res, next) => {
 
     res.status(201).json({
       message:
-        "Mijoz muvaffaqiyatli ro'yxatdan o'tdi. Iltimos, emailingizni tekshiring",
+        "Mijoz muvaffaqiyatli ro'yxatdan o'tdi.Emailingizni tekshiring",
       client: {
         id: client.id,
         name: client.name,
@@ -257,7 +256,7 @@ const clientRegister = async (req, res, next) => {
   }
 };
 
-// Client uchun tizimga kirish
+
 const clientLogin = async (req, res, next) => {
   try {
     const { error } = loginClientSchema.validate(req.body);
@@ -267,26 +266,26 @@ const clientLogin = async (req, res, next) => {
 
     const { email, password } = req.body;
 
-    // Clientni topish
+
     const client = await Client.findOne({ where: { email } });
     if (!client) {
       return res.status(401).json({ message: "Email yoki parol noto'g'ri" });
     }
 
-    // Parolni tekshirish
+
     const isMatch = await bcrypt.compare(password, client.password_hash);
     if (!isMatch) {
       return res.status(401).json({ message: "Email yoki parol noto'g'ri" });
     }
 
-    // Token generatsiya qilish
+
     const { accessToken, refreshToken } = generateTokens(client.id, "client");
 
-    // Refresh tokenni saqlash
+
     client.refreshToken = refreshToken;
     client.refreshToken_expires_at = new Date(
       Date.now() + 7 * 24 * 60 * 60 * 1000
-    ); // 7 kun
+    ); 
     await client.save();
 
     res.json({
@@ -305,7 +304,7 @@ const clientLogin = async (req, res, next) => {
   }
 };
 
-// Client uchun tizimdan chiqish
+
 const clientLogout = async (req, res, next) => {
   try {
     const client = await Client.findByPk(req.user.id);
@@ -323,7 +322,7 @@ const clientLogout = async (req, res, next) => {
   }
 };
 
-// Client refresh tokenini yangilash
+
 const clientRefreshToken = async (req, res, next) => {
   try {
     const { refreshToken } = req.body;
@@ -352,7 +351,7 @@ const clientRefreshToken = async (req, res, next) => {
     client.refreshToken = newRefreshToken;
     client.refreshToken_expires_at = new Date(
       Date.now() + 7 * 24 * 60 * 60 * 1000
-    ); // 7 kun
+    ); 
     await client.save();
 
     res.json({
@@ -365,18 +364,18 @@ const clientRefreshToken = async (req, res, next) => {
   }
 };
 
-// Client email faollashtirish
+
 const clientActivate = async (req, res, next) => {
   try {
     const { token } = req.params;
 
-    // Tokenni tekshirish
+
     const decoded = jwt.verify(token, config.get("jwt.secret"));
     if (!decoded) {
       return res.status(400).json({ message: "Yaroqsiz token" });
     }
 
-    // Clientni topish
+
     const client = await Client.findOne({
       where: {
         email: decoded.email,
@@ -391,7 +390,7 @@ const clientActivate = async (req, res, next) => {
         .json({ message: "Mijoz topilmadi yoki allaqachon aktivlashtirilgan" });
     }
 
-    // Clientni aktivlashtirish
+
     client.is_active = true;
     client.activation_token = null;
     await client.save();
@@ -402,7 +401,7 @@ const clientActivate = async (req, res, next) => {
   }
 };
 
-// Owner email faollashtirish
+
 const ownerActivate = async (req, res, next) => {
   try {
     const { token } = req.params;
@@ -413,7 +412,7 @@ const ownerActivate = async (req, res, next) => {
       return res.status(400).json({ message: "Yaroqsiz token" });
     }
 
-    // Adminni topish
+
     const admin = await Admin.findOne({
       where: {
         id: decoded.id,
@@ -429,7 +428,7 @@ const ownerActivate = async (req, res, next) => {
         .json({ message: "Owner topilmadi yoki allaqachon aktivlashtirilgan" });
     }
 
-    // Ownerni aktivlashtirish
+
     admin.is_active = true;
     await admin.save();
 

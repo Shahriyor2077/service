@@ -1,5 +1,5 @@
 const sendErrorResponse = (error, res) => {
-  // Agar error undefined bo'lsa, default xatolik yaratish
+
   if (!error) {
     return res.status(500).json({
       message: "Serverda kutilmagan xatolik yuz berdi",

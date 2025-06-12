@@ -10,10 +10,9 @@ const {
 } = require("../validations/filters.validation");
 const sequelize = require("sequelize");
 
-// 1. Berilgan vaqt oralig'ida foydalanilgan xizmatlar ro'yxatini chiqarish
+// 1. Berilgan vaqt oralig'ida foydalanilgan xizmatlar ro'yxati
 const getServicesByDateRange = async (req, res) => {
   try {
-    // Validatsiya
     const { error } = getServicesByDateRangeSchema.validate(req.query);
     if (error) {
       return res.status(400).json({
@@ -132,7 +131,7 @@ const getServicesByDateRange = async (req, res) => {
 // 2. Berilgan vaqt oralig'ida xizmatdan foydalangan Clientlar ro'yxatini chiqarish
 const getClientsByDateRange = async (req, res) => {
   try {
-    // Validatsiya
+
     const { error } = getClientsByDateRangeSchema.validate(req.query);
     if (error) {
       return res.status(400).json({
@@ -351,7 +350,7 @@ async function getTopOwnersByService(req, res) {
   }
 }
 
-// 5. Berilgan Client ma'lumotlari asosida qaysi xizmatga (ownerni ko'rsatgan holda) amalga oshirilgan Paymentlar ro'yxatini chiqarish
+// 5. Berilgan Client ma'lumotlari asosida qaysi xizmatga amalga oshirilgan Paymentlar ro'yxati
 async function getClientPaymentsByService(req, res) {
   try {
     const { client_id } = req.params;

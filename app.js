@@ -9,12 +9,12 @@ const routes = require("./routes/index.routes");
 
 const app = express();
 
-// Middleware
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Request logger middleware
+
 app.use((req, res, next) => {
   const start = Date.now();
   res.on("finish", () => {
@@ -46,7 +46,7 @@ async function start() {
     logger.info("Database connection has been established successfully.");
 
     await sequelize.sync({ alter: true });
-    logger.info("Ma'lumotlar bazasi jadvallari xavfsiz tarzda yangilandi");
+    logger.info("Ma'lumotlar bazasi jadvallari yangilandi");
 
     app.listen(PORT, () => {
       logger.info(`Server is running on port ${PORT}`);
